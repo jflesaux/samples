@@ -7,6 +7,7 @@
 using System;
 using System.Globalization;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace TollApp
 {
@@ -44,6 +45,29 @@ namespace TollApp
 
         public override string Format()
         {
+            return FormatJson();
+        }
+
+        private string FormatJson()
+        {
+
+            return JsonConvert.SerializeObject(new
+            {
+                TollId = this.TollId.ToString(CultureInfo.InvariantCulture),
+                EntryTime = this.EntryTime.ToString("o"),
+                LicensePlate = this.LicensePlate,
+                State = this.State,
+                Make = this.CarModel.Make,
+                Model = this.CarModel.Model,
+                VehicleType = this.CarModel.VehicleType.ToString(CultureInfo.InvariantCulture),
+                VehicleWeight = this.CarModel.VehicleWeight.ToString(CultureInfo.InvariantCulture),
+                Toll = this.TollAmount.ToString(CultureInfo.InvariantCulture),
+                Tag = this.Tag.ToString(CultureInfo.InvariantCulture)
+            });
+        }
+
+        private string FormatCsv()
+        {
             var sb = new StringBuilder();
             sb.AppendLine(@"TollId,EntryTime,LicensePlate,State,Make,Model,VehicleType,VehicleWeight,Toll,Tag");
             sb.AppendLine(
@@ -77,6 +101,21 @@ namespace TollApp
 
         public override string Format()
         {
+            return FormatJson();
+        }
+
+        public string FormatJson()
+        {
+            return JsonConvert.SerializeObject(new
+            {
+                TollId = this.TollId.ToString(CultureInfo.InvariantCulture),
+                ExitTime = this.ExitTime.ToString("o"),
+                LicensePlate = this.LicensePlate,
+            });
+        }
+
+        public string FormatCsv()
+        {
             var sb = new StringBuilder();
             sb.AppendLine(@"TollId,ExitTime,LicensePlate");
             sb.AppendLine(
@@ -103,5 +142,12 @@ namespace TollApp
             VehicleType = vehicleType;
             VehicleWeight = vehicleWeight;
         }
+    }
+
+    public class Registration
+    {
+        public string LicensePlate { get; set; }
+        public string RegistrationId { get; set; }
+        public int Expired { get; set; }
     }
 }
